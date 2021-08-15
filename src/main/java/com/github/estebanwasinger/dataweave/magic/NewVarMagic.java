@@ -2,7 +2,6 @@ package com.github.estebanwasinger.dataweave.magic;
 
 import org.mule.runtime.api.metadata.TypedValue;
 
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +16,16 @@ public class NewVarMagic implements PostExectLineMagic {
     @Override
     public String getName() {
         return "var";
+    }
+
+    @Override
+    public String getUsage() {
+        return "%var <varName>. E.g: \"%var payload\"";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Saves result of the execution into a reusable variable";
     }
 
     @Override

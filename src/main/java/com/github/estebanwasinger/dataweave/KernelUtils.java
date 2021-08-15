@@ -1,7 +1,5 @@
 package com.github.estebanwasinger.dataweave;
 
-import org.checkerframework.checker.units.qual.C;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +10,8 @@ import static com.github.estebanwasinger.dataweave.MagicType.LINE;
 public class KernelUtils {
 
     public static ExecutionDescriptor parseExecution(String expression) {
-        Cursor cursor = new Cursor();
         int lastPos = expression.length() - 1;
+        Cursor cursor = new Cursor(lastPos);
         byte[] bytes = expression.getBytes(StandardCharsets.UTF_8);
 
         MagicType magicType= null;
@@ -61,14 +59,14 @@ public class KernelUtils {
     private static List<String> getTokens(Cursor cursor, byte[] bytes) {
         boolean endOfLine = false;
         List<String> tokens = new ArrayList<>();
-        while (bytes[cursor.peek()] != '\n' && !endOfLine) {
+        while (!cursor.isEndOfFile() && bytes[cursor.peek()] != '\n' && !endOfLine) {
             StringBuilder stringBuilder = new StringBuilder();
 
-            while (bytes[cursor.peek()] != ' ' && bytes[cursor.peek()] != '\n') {
+            while (!cursor.isEndOfFile() && bytes[cursor.peek()] != ' ' && bytes[cursor.peek()] != '\n') {
                 stringBuilder.append((char) bytes[cursor.peek()]);
                 cursor.next();
             }
-            if (bytes[cursor.peek()] == '\n') {
+            if (!cursor.isEndOfFile() && bytes[cursor.peek()] == '\n') {
                 endOfLine = true;
             }
             cursor.next();
@@ -80,10 +78,19 @@ public class KernelUtils {
 
     private static class Cursor {
         int cursor = 0;
+        private int lastPos;
+
+        public Cursor(int lastPos) {
+            this.lastPos = lastPos;
+        }
 
         public int next() {
             cursor++;
             return cursor;
+        }
+
+        public boolean isEndOfFile() {
+            return cursor > lastPos;
         }
 
         public int peek() {

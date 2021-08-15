@@ -2,7 +2,7 @@ package com.github.estebanwasinger.dataweave.magic;
 
 import java.util.List;
 
-public interface PreExecLineMagic<T> extends Magic{
+public interface PreExecLineMagic extends Magic {
 
-    T handleLineMagic(List<String> args);
+    void handleLineMagic(String script, List<String> args);
 }

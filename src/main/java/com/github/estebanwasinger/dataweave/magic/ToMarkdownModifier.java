@@ -4,6 +4,7 @@ import com.github.estebanwasinger.dataweave.executor.DWExecutor;
 import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.api.metadata.TypedValue;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,7 +39,22 @@ public class ToMarkdownModifier implements PayloadModifierLineMagic {
     public TypedValue handleLineMagic(List<String> args, TypedValue result) {
         HashMap<String, TypedValue> context = new HashMap<>();
         context.put("payload", result);
-        TypedValue execute = executor.execute(script, context);
+        TypedValue execute = executor.execute(script, context, Collections.emptyList());
         return new TypedValue(execute.getValue(), DataType.builder().type(String.class).mediaType("text/markdown").build());
+    }
+
+    @Override
+    public String getName() {
+        return "mrkdwn";
+    }
+
+    @Override
+    public String getUsage() {
+        return "%mrkdwn";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Renders output to Markdown Table";
     }
 }

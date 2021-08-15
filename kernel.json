@@ -2,8 +2,7 @@
   "argv": [
     "java",
     "-jar",
-    "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005",
-    "/usr/local/Cellar/python@3.9/3.9.2_4/Frameworks/Python.framework/Versions/3.9/share/jupyter/kernels/dataweave-jupyter-kernel-1.0-SNAPSHOT-kernel/dataweave-jupyter-kernel-1.0-SNAPSHOT.jar",
+    "@KERNEL_INSTALL_DIRECTORY@/dataweave-jupyter-kernel-1.0-SNAPSHOT.jar",
     "{connection_file}"
   ],
   "display_name": "DataWeave",

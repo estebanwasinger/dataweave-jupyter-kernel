@@ -1,9 +1,6 @@
 package com.github.estebanwasinger.dataweave.magic;
 
-import com.github.estebanwasinger.dataweave.magic.CellMagic;
-import com.github.estebanwasinger.dataweave.magic.PostExectLineMagic;
 import org.mule.runtime.api.metadata.DataType;
-import org.mule.runtime.api.metadata.DataTypeBuilder;
 import org.mule.runtime.api.metadata.TypedValue;
 
 import java.util.List;
@@ -20,6 +17,16 @@ public class InputMagic implements CellMagic {
     @Override
     public String getName() {
         return "input";
+    }
+
+    @Override
+    public String getUsage() {
+        return "%%input <varName> <contentType>\n<input value>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Stores an static value into a reusable variable";
     }
 
     @Override

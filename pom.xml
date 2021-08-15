@@ -15,18 +15,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.mule.services</groupId>
-            <artifactId>mule-service-weave</artifactId>
-            <version>2.3.0</version>
-            <classifier>mule-service</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.weave</groupId>
-            <artifactId>parser</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.mule.runtime</groupId>
             <artifactId>mule-core</artifactId>
             <version>4.3.0</version>

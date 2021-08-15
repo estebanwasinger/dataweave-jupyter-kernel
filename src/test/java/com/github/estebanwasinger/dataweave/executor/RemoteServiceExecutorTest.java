@@ -1,6 +1,5 @@
 package com.github.estebanwasinger.dataweave.executor;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.mule.runtime.api.metadata.TypedValue;
 
@@ -13,7 +12,7 @@ public class RemoteServiceExecutorTest
 
     @Test
     public void executeTransformation() {
-        TypedValue execute = executor.execute("1 to 5", Collections.emptyMap());
+        TypedValue execute = executor.execute("1 to 5", Collections.emptyMap(), Collections.emptyList());
         System.out.println(execute.getValue());
         System.out.println(execute.getDataType());
     }

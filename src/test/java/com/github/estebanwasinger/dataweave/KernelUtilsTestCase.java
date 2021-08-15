@@ -4,20 +4,6 @@ import io.github.spencerpark.jupyter.kernel.display.DisplayData;
 import io.github.spencerpark.jupyter.kernel.display.mime.MIMEType;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mule.weave.v2.model.EvaluationContext;
-import org.mule.weave.v2.model.values.Value;
-import org.mule.weave.v2.parser.ast.structure.DocumentNode;
-import org.mule.weave.v2.parser.ast.variables.NameIdentifier;
-import org.mule.weave.v2.parser.phase.PhaseResult;
-import org.mule.weave.v2.runtime.CompilationResult;
-import org.mule.weave.v2.runtime.ExecutableWeave;
-import org.mule.weave.v2.runtime.ExecutableWeaveHelper;
-import org.mule.weave.v2.runtime.WeaveCompiler;
-import org.mule.weave.v2.runtime.utils.WeaveRunner;
-import org.mule.weave.v2.sdk.ParsingContextFactory;
-import org.mule.weave.v2.sdk.WeaveResourceFactory;
-import scala.collection.immutable.HashMap;
-import scala.collection.immutable.Map;
 
 import java.util.Optional;
 
@@ -50,11 +36,18 @@ public class KernelUtilsTestCase {
     }
 
     @Test
-    public void test() throws Exception {
-        DataWeaveKernel dataWeaveKernel = new DataWeaveKernel();
-        DisplayData eval = dataWeaveKernel.eval("1 to 5");
-        System.out.println(eval.getData(MIMEType.ANY));
-
+    public void onlyMagicsNoBody(){
+        ExecutionDescriptor executionDescriptor = KernelUtils.parseExecution("%help");
+        System.out.println(executionDescriptor);
 
     }
+
+//    @Test
+//    public void test() throws Exception {
+//        DataWeaveKernel dataWeaveKernel = new DataWeaveKernel();
+//        DisplayData eval = dataWeaveKernel.eval("1 to 5");
+//        System.out.println(eval.getData(MIMEType.ANY));
+//
+//
+//    }
 }

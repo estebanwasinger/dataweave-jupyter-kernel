@@ -6,11 +6,14 @@ import com.github.estebanwasinger.dataweave.magic.*;
 import io.github.spencerpark.jupyter.kernel.BaseKernel;
 import io.github.spencerpark.jupyter.kernel.LanguageInfo;
 import io.github.spencerpark.jupyter.kernel.display.DisplayData;
-import io.github.spencerpark.jupyter.kernel.display.Renderer;
 import org.jetbrains.annotations.NotNull;
+import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.api.metadata.TypedValue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static com.github.estebanwasinger.dataweave.MagicType.CELL;
@@ -19,19 +22,35 @@ import static com.github.estebanwasinger.dataweave.MagicType.LINE;
 public class DataWeaveKernel extends BaseKernel {
 
     Map<String, PayloadModifierLineMagic> payloadModifierHandlers = new HashMap<>();
+    Map<String, PreExecLineMagic> preExecLineHandlers = new HashMap<>();
     Map<String, PostExectLineMagic> postExecLineMagicHandlers = new HashMap<>();
     Map<String, CellMagic> cellMagicHandlers = new HashMap<>();
     Map<String, TypedValue> context;
+    List<String> imports;
     DWExecutor executor;
 
     public DataWeaveKernel() {
         context = new HashMap<>();
+        imports = new ArrayList<>();
 
         cellMagicHandlers.put("input", new InputMagic(context));
         postExecLineMagicHandlers.put("var", new NewVarMagic(context));
         executor = new RemoteServiceExecutor();
         payloadModifierHandlers.put("mrkdwn", new ToMarkdownModifier(executor));
+        preExecLineHandlers.put("import", new ImportLineMagic(imports));
+        payloadModifierHandlers.put("help", new HelpLineMagic(listMagics()));
 //        executor = new LocalExecutor();
+    }
+
+    private List<Magic> listMagics() {
+        List<Magic> magicList = new ArrayList<>();
+
+        magicList.addAll(postExecLineMagicHandlers.values());
+        magicList.addAll(preExecLineHandlers.values());
+        magicList.addAll(payloadModifierHandlers.values());
+        magicList.addAll(cellMagicHandlers.values());
+
+        return magicList;
     }
 
     @Override
@@ -66,11 +85,20 @@ public class DataWeaveKernel extends BaseKernel {
                 }
                 if(payloadModifierHandlers.containsKey(magicName)){
                     return () -> {
-                        TypedValue result = evaluate(executionDescriptor.getBody());
+                        TypedValue result;
+                        if(!executionDescriptor.getBody().isEmpty()) {
+                            result = evaluate(executionDescriptor.getBody());
+                        } else {
+                            result = new TypedValue("", DataType.STRING);
+                        }
                         PayloadModifierLineMagic magic = payloadModifierHandlers.get(magicName);
                         TypedValue typedValue = magic.handleLineMagic(magicDescriptor.getArgs(), result);
                         return createDisplayData(typedValue);
                     };
+                }
+                if(preExecLineHandlers.containsKey(magicName)){
+                    PreExecLineMagic preExecLineMagic = preExecLineHandlers.get(magicName);
+                    preExecLineMagic.handleLineMagic(executionDescriptor.getBody(), executionDescriptor.getMagic().get().getArgs());
                 }
 
             }
@@ -108,7 +136,11 @@ public class DataWeaveKernel extends BaseKernel {
     }
 
     private TypedValue evaluate(String expr) {
-        return executor.execute(expr, context);
+        if(!expr.isEmpty()){
+            return executor.execute(expr, context, imports);
+        } else {
+            return new TypedValue("", DataType.STRING);
+        }
     }
 
     @Override

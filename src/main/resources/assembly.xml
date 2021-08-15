@@ -11,17 +11,21 @@
     <files>
         <file>
             <source>kernel.json</source>
+            <outputDirectory>/dataweave</outputDirectory>
+        </file>
+        <file>
+            <source>install.py</source>
             <outputDirectory>/</outputDirectory>
         </file>
         <file>
             <source>logo-64x64.png</source>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>/dataweave</outputDirectory>
         </file>
     </files>
 
     <dependencySets>
         <dependencySet>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>/dataweave</outputDirectory>
             <unpack>false</unpack>
             <scope>runtime</scope>
             <useProjectArtifact>true</useProjectArtifact>
@@ -30,7 +34,7 @@
             </includes>
         </dependencySet>
         <dependencySet>
-            <outputDirectory>/libs</outputDirectory>
+            <outputDirectory>/dataweave/libs</outputDirectory>
             <useProjectArtifact>true</useProjectArtifact>
             <useTransitiveDependencies>true</useTransitiveDependencies>
             <unpack>false</unpack>
